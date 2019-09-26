@@ -45,25 +45,26 @@
                 <icon-github />
               </icon-base>
             </v-row>
-            <v-row justify="center" class="font-weight-light">
+            <v-row justify="center" class="font-weight-light mb-5">
               Or use your email
             </v-row>
-          </v-container>
-          <v-tabs grow>
-            <v-tab>Sign in</v-tab>
-            <v-tab>Register</v-tab>
 
-            <v-tab-item>
-              <v-container>
-                <login-form />
-              </v-container>
-            </v-tab-item>
-            <v-tab-item>
-              <v-container>
-                <signup-form />
-              </v-container>
-            </v-tab-item>
-          </v-tabs>
+            <v-tabs grow>
+              <v-tab>Sign in</v-tab>
+              <v-tab>Register</v-tab>
+
+              <v-tab-item>
+                <v-container>
+                  <login-form />
+                </v-container>
+              </v-tab-item>
+              <v-tab-item>
+                <v-container>
+                  <signup-form />
+                </v-container>
+              </v-tab-item>
+            </v-tabs>
+          </v-container>
         </v-sheet>
       </v-dialog>
     </v-app-bar>

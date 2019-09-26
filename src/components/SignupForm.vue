@@ -2,7 +2,7 @@
   <form>
     <v-text-field v-model="email" label="E-mail" required></v-text-field>
     <v-text-field v-model="password" label="Password" required></v-text-field>
-    <v-btn @click="submit">submit</v-btn>
+    <v-btn depressed color="primary" @click="submit">submit</v-btn>
   </form>
 </template>
 
