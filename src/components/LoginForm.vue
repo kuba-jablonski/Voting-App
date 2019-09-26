@@ -7,6 +7,8 @@
 </template>
 
 <script>
+import firebase from "firebase";
+
 export default {
   data() {
     return {
@@ -15,8 +17,10 @@ export default {
     };
   },
   methods: {
-    submit() {
-      console.log(this.email, this.password);
+    async submit() {
+      await firebase
+        .auth()
+        .signInWithEmailAndPassword(this.email, this.password);
     }
   }
 };

@@ -4,7 +4,16 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {},
-  mutations: {},
-  actions: {}
+  state: {
+    uid: null
+  },
+  mutations: {
+    SET_UID: (state, payload) => {
+      state.uid = payload;
+    }
+  },
+  actions: {},
+  getters: {
+    isAuthed: state => state.uid !== null
+  }
 });
