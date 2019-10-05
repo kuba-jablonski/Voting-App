@@ -1,23 +1,48 @@
 <template>
   <v-app>
     <v-app-bar flat app>
-      <v-toolbar-title class="headline text-uppercase">
-        <span>2POLL</span>
-        <!-- <span class="font-weight-light">MATERIAL DESIGN</span> -->
+      <v-toolbar-title class="headline text-uppercase d-flex align-center">
+        <v-img :src="logo" alt="Logo" max-height="45" max-width="45" />
+        <span>Poll</span>
+        <span class="font-weight-light">Time</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items class="mr-3">
-        <v-btn text>
+        <v-btn to="/about" text>
           <span>About</span>
         </v-btn>
-        <v-btn text>
+        <v-btn to="/polls" text>
           <span>Poll list</span>
         </v-btn>
       </v-toolbar-items>
       <v-btn v-if="!isAuthed" outlined @click="dialog = true">
         Sign in
       </v-btn>
-      <v-btn v-if="isAuthed" outlined @click="signout">Sign out</v-btn>
+      <!-- <v-btn
+        v-if="isAuthed"
+        outlined
+        @click="signout"
+      >Sign out</v-btn> -->
+      <v-menu v-if="isAuthed" offset-y>
+        <template v-slot:activator="{ on }">
+          <v-btn text v-on="on">
+            Welcome
+            <v-icon right>mdi-chevron-down</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item>
+            <v-list-item-title>Create New</v-list-item-title>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-title>View My Polls</v-list-item-title>
+          </v-list-item>
+          <v-divider></v-divider>
+          <v-list-item @click="signout">
+            <v-list-item-title>Logout</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </v-app-bar>
     <v-content>
       <signin-dialog :open="dialog" @close="dialog = false" />
@@ -38,7 +63,8 @@ export default {
     SigninDialog
   },
   data: () => ({
-    dialog: false
+    dialog: false,
+    logo: require("@/assets/poll-icon-4.jpg")
   }),
   computed: {
     ...mapGetters(["isAuthed"])
