@@ -31,7 +31,7 @@
           </v-btn>
         </template>
         <v-list>
-          <v-list-item>
+          <v-list-item @click="createDialog = true">
             <v-list-item-title>Create New</v-list-item-title>
           </v-list-item>
           <v-list-item>
@@ -45,7 +45,8 @@
       </v-menu>
     </v-app-bar>
     <v-content>
-      <signin-dialog :open="dialog" @close="dialog = false" />
+      <signin-dialog :open="signinDialog" @close="signinDialog = false" />
+      <create-dialog :open="createDialog" @close="createDialog = false" />
       <router-view />
     </v-content>
   </v-app>
@@ -56,14 +57,17 @@ import firebase from "firebase";
 import { mapGetters } from "vuex";
 
 import SigninDialog from "@/components/SigninDialog";
+import CreateDialog from "@/components/CreateDialog";
 
 export default {
   name: "App",
   components: {
-    SigninDialog
+    SigninDialog,
+    CreateDialog
   },
   data: () => ({
-    dialog: false,
+    signinDialog: false,
+    createDialog: false,
     logo: require("@/assets/poll-icon-4.jpg")
   }),
   computed: {
