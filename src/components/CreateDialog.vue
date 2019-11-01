@@ -3,7 +3,7 @@
     <v-card>
       <v-container>
         <h2>New Poll</h2>
-        <v-form v-model="valid">
+        <v-form @submit.prevent="handleSubmit">
           <v-container>
             <v-text-field
               v-model="question"
@@ -28,11 +28,7 @@
               >
             </v-row>
             <v-row>
-              <v-btn
-                depressed
-                color="primary"
-                class="mr-2"
-                @click="addOptionField"
+              <v-btn depressed color="primary" class="mr-2" type="submit"
                 >Submit</v-btn
               >
               <v-btn depressed @click="$emit('close')">Cancel</v-btn>
@@ -45,6 +41,12 @@
 </template>
 
 <script>
+import firebase from "firebase";
+
+function transformOptions(arr) {
+  return arr.map(o => ({ count: 0, option: o }));
+}
+
 export default {
   props: ["open"],
   data() {
@@ -62,6 +64,18 @@ export default {
     },
     removeOptionField(i) {
       this.options.splice(i, 1);
+    },
+    async handleSubmit() {
+      console.log(this.question);
+      console.log(this.options);
+      await firebase
+        .firestore()
+        .collection("polls")
+        .add({
+          question: this.question,
+          options: transformOptions(this.options),
+          votes: 0
+        });
     }
   }
 };
