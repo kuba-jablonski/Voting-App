@@ -3,17 +3,19 @@
     <v-card>
       <v-container>
         <h2>New Poll</h2>
-        <v-form @submit.prevent="handleSubmit">
+        <v-form ref="form" @submit.prevent="handleSubmit" v-model="valid">
           <v-container>
             <v-text-field
               v-model="question"
               label="Question"
+              :rules="[v => !!v || 'Question is required']"
               required
             ></v-text-field>
             <template v-for="(option, i) in options">
               <v-text-field
                 :key="option"
                 :value="option"
+                :rules="[v => !!v || 'Option is required']"
                 @input="handleInput(i, $event)"
               >
                 <v-icon slot="append" @click="removeOptionField(i)"
@@ -47,8 +49,9 @@ export default {
   props: ["open"],
   data() {
     return {
+      valid: false,
       question: "",
-      options: ["1", "2"]
+      options: ["", ""]
     };
   },
   methods: {
@@ -62,18 +65,21 @@ export default {
       this.options.splice(i, 1);
     },
     async handleSubmit() {
-      const { path } = await db.collection("polls").add({
-        question: this.question,
-        votes: 0
-      });
-      const batch = db.batch();
-      this.options.forEach(o => {
-        batch.set(db.collection(`${path}/options`).doc(), {
-          count: 0,
-          option: o
+      if (this.$refs.form.validate()) {
+        const { path } = await db.collection("polls").add({
+          question: this.question,
+          votes: 0
         });
-      });
-      await batch.commit();
+        const batch = db.batch();
+        this.options.forEach(o => {
+          batch.set(db.collection(`${path}/options`).doc(), {
+            count: 0,
+            option: o
+          });
+        });
+        await batch.commit();
+        this.$emit("close");
+      }
     }
   }
 };
