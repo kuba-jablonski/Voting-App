@@ -30,7 +30,12 @@
               >
             </v-row>
             <v-row>
-              <v-btn depressed color="primary" class="mr-2" type="submit"
+              <v-btn
+                :loading="loading"
+                depressed
+                color="primary"
+                class="mr-2"
+                type="submit"
                 >Submit</v-btn
               >
               <v-btn depressed @click="$emit('close')">Cancel</v-btn>
@@ -49,6 +54,7 @@ export default {
   props: ["open"],
   data() {
     return {
+      loading: false,
       valid: false,
       question: "",
       options: ["", ""]
@@ -65,6 +71,7 @@ export default {
       this.options.splice(i, 1);
     },
     async handleSubmit() {
+      this.loading = true;
       if (this.$refs.form.validate()) {
         const { path } = await db.collection("polls").add({
           question: this.question,
@@ -80,6 +87,7 @@ export default {
         await batch.commit();
         this.$emit("close");
       }
+      this.loading = false;
     }
   }
 };
