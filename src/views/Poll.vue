@@ -30,8 +30,20 @@ export default {
       .get()
       .then(doc => {
         console.log(doc.data());
-        this.options = doc.data().options;
         this.question = doc.data().question;
+      });
+
+    firebase
+      .firestore()
+      .collection("polls")
+      .doc(`${this.$route.params.id}`)
+      .collection("options")
+      .get()
+      .then(snap => {
+        snap.forEach(doc => {
+          console.log(doc.data());
+          this.options.push(doc.data());
+        });
       });
   }
 };

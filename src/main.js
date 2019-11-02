@@ -18,8 +18,8 @@ const firebaseConfig = {
   appId: "1:977007321934:web:3da7a71bd727fb70e8741f",
   measurementId: "G-4DLYW0C3D0"
 };
-
 firebase.initializeApp(firebaseConfig);
+export const db = firebase.firestore();
 
 new Vue({
   router,

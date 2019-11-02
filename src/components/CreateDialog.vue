@@ -41,11 +41,7 @@
 </template>
 
 <script>
-import firebase from "firebase";
-
-function transformOptions(arr) {
-  return arr.map(o => ({ count: 0, option: o }));
-}
+import { db } from "@/main";
 
 export default {
   props: ["open"],
@@ -66,16 +62,18 @@ export default {
       this.options.splice(i, 1);
     },
     async handleSubmit() {
-      console.log(this.question);
-      console.log(this.options);
-      await firebase
-        .firestore()
-        .collection("polls")
-        .add({
-          question: this.question,
-          options: transformOptions(this.options),
-          votes: 0
+      const { path } = await db.collection("polls").add({
+        question: this.question,
+        votes: 0
+      });
+      const batch = db.batch();
+      this.options.forEach(o => {
+        batch.set(db.collection(`${path}/options`).doc(), {
+          count: 0,
+          option: o
         });
+      });
+      await batch.commit();
     }
   }
 };
