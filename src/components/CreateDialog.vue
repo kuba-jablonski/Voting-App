@@ -13,7 +13,7 @@
             ></v-text-field>
             <template v-for="(option, i) in options">
               <v-text-field
-                :key="option"
+                :key="i"
                 :value="option"
                 :rules="[v => !!v || 'Option is required']"
                 @input="handleInput(i, $event)"
@@ -44,6 +44,12 @@
         </v-form>
       </v-container>
     </v-card>
+    <v-snackbar v-model="snackbar" :timeout="5000" color="red">
+      Something went wrong
+      <v-btn text @click="snackbar = false">
+        Close
+      </v-btn>
+    </v-snackbar>
   </v-dialog>
 </template>
 
@@ -54,6 +60,7 @@ export default {
   props: ["open"],
   data() {
     return {
+      snackbar: false,
       loading: false,
       valid: false,
       question: "",
@@ -73,19 +80,23 @@ export default {
     async handleSubmit() {
       this.loading = true;
       if (this.$refs.form.validate()) {
-        const { path } = await db.collection("polls").add({
-          question: this.question,
-          votes: 0
-        });
-        const batch = db.batch();
-        this.options.forEach(o => {
-          batch.set(db.collection(`${path}/options`).doc(), {
-            count: 0,
-            option: o
+        try {
+          const { path } = await db.collection("polls").add({
+            question: this.question,
+            votes: 0
           });
-        });
-        await batch.commit();
-        this.$emit("close");
+          const batch = db.batch();
+          this.options.forEach(o => {
+            batch.set(db.collection(`${path}/options`).doc(), {
+              count: 0,
+              option: o
+            });
+          });
+          await batch.commit();
+          this.$emit("close");
+        } catch (e) {
+          this.snackbar = true;
+        }
       }
       this.loading = false;
     }
