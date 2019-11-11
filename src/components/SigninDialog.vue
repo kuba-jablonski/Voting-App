@@ -41,7 +41,7 @@
           </v-tab-item>
           <v-tab-item>
             <v-container>
-              <signup-form />
+              <signup-form @close="$emit('close')" />
             </v-container>
           </v-tab-item>
         </v-tabs>

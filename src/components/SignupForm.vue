@@ -1,21 +1,26 @@
 <template>
-  <v-form ref="form" v-model="valid">
+  <v-form ref="form" v-model="valid" @submit.prevent="submit">
     <v-text-field
+      validate-on-blur
       :rules="usernameRules"
       v-model="username"
       label="Username"
     ></v-text-field>
     <v-text-field
+      validate-on-blur
       :rules="emailRules"
       v-model="email"
       label="E-mail"
     ></v-text-field>
     <v-text-field
+      validate-on-blur
       :rules="passwordRules"
       v-model="password"
       label="Password"
     ></v-text-field>
-    <v-btn depressed color="primary" @click="submit">submit</v-btn>
+    <v-btn :loading="loading" depressed color="primary" type="submit"
+      >submit</v-btn
+    >
     <v-snackbar v-model="snackbar" :timeout="5000" color="red">
       {{ errorMsg }}
       <v-btn text @click="snackbar = false">
@@ -49,20 +54,24 @@ export default {
       ],
       valid: false,
       snackbar: false,
-      errorMsg: ""
+      errorMsg: "",
+      loading: false
     };
   },
   methods: {
     async submit() {
+      this.loading = true;
       if (this.$refs.form.validate()) {
         try {
           await auth.createUserWithEmailAndPassword(this.email, this.password);
           auth.currentUser.updateProfile({ displayName: this.username });
+          this.$emit("close");
         } catch (e) {
           this.errorMsg = e.message ? e.message : "Something went wrong";
           this.snackbar = true;
         }
       }
+      this.loading = false;
     }
   }
 };
