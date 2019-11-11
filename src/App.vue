@@ -15,7 +15,7 @@
           <span>Poll list</span>
         </v-btn>
       </v-toolbar-items>
-      <v-btn v-if="!isAuthed" outlined @click="dialog = true">
+      <v-btn v-if="!isAuthed" outlined @click="signinDialog = true">
         Sign in
       </v-btn>
       <!-- <v-btn
