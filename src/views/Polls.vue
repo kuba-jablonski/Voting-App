@@ -11,7 +11,12 @@
           <v-list-item-title>{{ item.question }}</v-list-item-title>
         </v-list-item-content>
         <v-list-item-action>
-          <v-list-item-action-text>by bob | 2019/09/09</v-list-item-action-text>
+          <v-list-item-action-text
+            >by {{ item.author }} |
+            {{
+              convertTimestamp(item.createdAt.seconds)
+            }}</v-list-item-action-text
+          >
         </v-list-item-action>
       </v-list-item>
     </v-list>
@@ -36,6 +41,16 @@ export default {
     activeIndex: null,
     voteDialog: false
   }),
+  methods: {
+    convertTimestamp(s) {
+      const d = new Date(s * 1000);
+      const year = d.getFullYear();
+      const month = d.getMonth();
+      const day = d.getDate();
+
+      return `${year}/${month}/${day}`;
+    }
+  },
   mounted() {
     firebase
       .firestore()

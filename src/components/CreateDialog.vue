@@ -85,8 +85,9 @@ export default {
           const { path } = await db.collection("polls").add({
             question: this.question,
             votes: 0,
-            createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
-            author: auth.currentUser.displayName
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            author: auth.currentUser.displayName,
+            voters: []
           });
           const batch = db.batch();
           this.options.forEach(o => {
