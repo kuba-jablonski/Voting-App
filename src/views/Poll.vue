@@ -10,6 +10,7 @@
         {{ option.count }}
       </div>
     </div> -->
+    <div v-if="question === null">Loading...</div>
     <component
       v-if="question !== null"
       :is="activeComponent"
