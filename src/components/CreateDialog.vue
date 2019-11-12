@@ -86,7 +86,10 @@ export default {
             question: this.question,
             votes: 0,
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            author: auth.currentUser.displayName,
+            author: {
+              username: auth.currentUser.displayName,
+              id: auth.currentUser.uid
+            },
             voters: []
           });
           const batch = db.batch();

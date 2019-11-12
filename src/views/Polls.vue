@@ -12,7 +12,7 @@
         </v-list-item-content>
         <v-list-item-action>
           <v-list-item-action-text
-            >by {{ item.author }} |
+            >by {{ item.author.username }} |
             {{
               convertTimestamp(item.createdAt.seconds)
             }}</v-list-item-action-text
