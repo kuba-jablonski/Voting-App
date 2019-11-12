@@ -10,53 +10,36 @@
         {{ option.count }}
       </div>
     </div> -->
-    <p>I'd like to vote for:</p>
-    <v-select
-      v-model="selected"
-      :items="optionStrings"
-      label="Choose option"
-      required
-    ></v-select>
-    <v-btn @click="submitVote" :disabled="selected === ''">Vote!</v-btn>
-    <p>(Submit your vote to see results)</p>
+    <component
+      v-if="question !== null"
+      :is="activeComponent"
+      :options="options"
+    />
   </v-container>
 </template>
 
 <script>
 import firebase from "firebase";
-import { db, auth } from "@/main";
+// import { db, auth } from "@/main";
+import PollVote from "@/components/PollVote";
+import PollResults from "@/components/PollResults";
 
 export default {
+  components: { PollVote, PollResults },
   data() {
     return {
-      options: [],
-      selected: ""
+      author: null,
+      question: null,
+      voters: null,
+      options: []
     };
   },
   computed: {
-    optionStrings() {
-      return this.options.map(o => o.option);
-    }
-  },
-  methods: {
-    async submitVote() {
-      const selectedId = this.options.find(o => o.option === this.selected).id;
-      const pollRef = db.collection("polls").doc(`${this.$route.params.id}`);
-      const optionRef = db
-        .collection("polls")
-        .doc(`${this.$route.params.id}`)
-        .collection("options")
-        .doc(selectedId);
-      const batch = db.batch();
-
-      batch.update(pollRef, {
-        votes: firebase.firestore.FieldValue.increment(1),
-        voters: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.uid)
-      });
-      batch.update(optionRef, {
-        count: firebase.firestore.FieldValue.increment(1)
-      });
-      await batch.commit();
+    uid() {
+      return this.$store.state.uid;
+    },
+    activeComponent() {
+      return this.voters.includes(this.uid) ? "poll-results" : "poll-vote";
     }
   },
   mounted() {
@@ -66,8 +49,10 @@ export default {
       .doc(`${this.$route.params.id}`)
       .get()
       .then(doc => {
-        console.log(doc.data());
-        this.question = doc.data().question;
+        const { author, question, voters } = doc.data();
+        this.question = question;
+        this.author = author;
+        this.voters = voters;
       });
 
     firebase
