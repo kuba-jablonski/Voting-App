@@ -54,7 +54,8 @@
 </template>
 
 <script>
-import { db } from "@/main";
+import firebase from "firebase";
+import { db, auth } from "@/main";
 
 export default {
   props: ["open"],
@@ -83,7 +84,9 @@ export default {
         try {
           const { path } = await db.collection("polls").add({
             question: this.question,
-            votes: 0
+            votes: 0,
+            createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+            author: auth.currentUser.displayName
           });
           const batch = db.batch();
           this.options.forEach(o => {
