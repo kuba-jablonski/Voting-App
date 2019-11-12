@@ -36,7 +36,7 @@
 
           <v-tab-item>
             <v-container>
-              <login-form />
+              <login-form @close="$emit('close')" />
             </v-container>
           </v-tab-item>
           <v-tab-item>
