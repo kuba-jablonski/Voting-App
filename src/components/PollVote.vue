@@ -1,14 +1,23 @@
 <template>
-  <div>
-    <p>I'd like to vote for:</p>
-    <v-select
-      v-model="selected"
-      :items="optionStrings"
-      label="Choose option"
-      required
-    ></v-select>
-    <v-btn @click="submitVote" :disabled="selected === ''">Vote!</v-btn>
-    <p>(Submit your vote to see results)</p>
+  <div class="d-flex align-center flex-column">
+    <h2 class="mb-5">Vote to view poll results</h2>
+    <p class="font-weight-light title primary--text">Question</p>
+    <div class="px-4">
+      <span class="font-weight-bold">{{ question }}</span>
+      <div class="d-flex align-center">
+        <span class="mr-3">I'd like to vote for:</span>
+
+        <v-select
+          :style="{ maxWidth: '300px' }"
+          v-model="selected"
+          :items="optionStrings"
+          label="Choose option"
+          required
+        ></v-select>
+      </div>
+
+      <v-btn @click="submitVote" :disabled="selected === ''">Vote!</v-btn>
+    </div>
   </div>
 </template>
 
@@ -17,7 +26,7 @@ import firebase from "firebase";
 import { db, auth } from "@/main";
 
 export default {
-  props: ["options"],
+  props: ["options", "question"],
   data() {
     return {
       selected: ""
@@ -51,5 +60,3 @@ export default {
   }
 };
 </script>
-
-<style></style>
