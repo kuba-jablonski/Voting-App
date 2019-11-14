@@ -1,9 +1,31 @@
 <template>
-  <v-container>
+  <v-container :style="{ maxWidth: '800px' }">
+    <v-row>
+      <v-col cols="12" sm="6">
+        <v-text-field
+          outlined
+          label="Search"
+          placeholder="Enter keyword here..."
+          v-model="keyword"
+        ></v-text-field>
+      </v-col>
+      <v-col cols="12" sm="6">
+        <v-select
+          outlined
+          label="Sort by"
+          v-model="sortType"
+          :items="sortOptions"
+          required
+        ></v-select>
+      </v-col>
+    </v-row>
     <v-list>
-      <v-subheader>REPORTS</v-subheader>
-
-      <v-list-item :to="`/poll/${item.id}`" v-for="(item, i) in items" :key="i">
+      <v-subheader>POLL LIST</v-subheader>
+      <v-list-item
+        :to="`/poll/${item.id}`"
+        v-for="(item, i) in filteredItems"
+        :key="i"
+      >
         <v-list-item-icon>
           <v-chip>{{ item.votes }}</v-chip>
         </v-list-item-icon>
@@ -39,8 +61,27 @@ export default {
   data: () => ({
     items: [],
     activeIndex: null,
-    voteDialog: false
+    voteDialog: false,
+    sortType: "most popular",
+    sortOptions: ["most popular", "most recent"],
+    keyword: ""
   }),
+  computed: {
+    sortedItems() {
+      const sorted = this.items
+        .slice()
+        .sort((a, b) => b.createdAt.seconds - a.createdAt.seconds);
+
+      return this.sortType === "most popular"
+        ? sorted.sort((a, b) => b.votes - a.votes)
+        : sorted;
+    },
+    filteredItems() {
+      return this.sortedItems.filter(i =>
+        i.question.toLowerCase().includes(this.keyword.trim().toLowerCase())
+      );
+    }
+  },
   methods: {
     convertTimestamp(s) {
       const d = new Date(s * 1000);
