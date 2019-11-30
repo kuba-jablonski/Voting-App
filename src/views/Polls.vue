@@ -22,9 +22,9 @@
     <v-list>
       <v-subheader>POLL LIST</v-subheader>
       <v-list-item
-        :to="`/poll/${item.id}`"
         v-for="(item, i) in filteredItems"
         :key="i"
+        @click="(activeIndex = i), (voteDialog = true)"
       >
         <v-list-item-icon>
           <v-chip>{{ item.votes }}</v-chip>
@@ -45,7 +45,7 @@
     <vote-dialog
       :open="voteDialog"
       @close="voteDialog = false"
-      :poll="items[activeIndex]"
+      :poll="filteredItems[activeIndex]"
     />
   </v-container>
 </template>

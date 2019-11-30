@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :value="open" @input="$emit('close')" max-width="600px">
+  <v-dialog :value="open" @input="clearDialog" max-width="600px">
     <v-card v-if="poll">
       <v-container>
         <h2>Vote and view poll results</h2>
@@ -7,8 +7,9 @@
         <div>
           I'd like to vote for
           <v-select
+            :loading="loadingOptions"
             v-model="selected"
-            :items="options"
+            :items="optionStrings"
             label="Question"
             required
           ></v-select>
@@ -29,13 +30,17 @@ export default {
   props: ["open", "poll"],
   data() {
     return {
-      question: "",
-      selected: ""
+      author: null,
+      question: null,
+      voters: null,
+      options: [],
+      selected: "",
+      loadingOptions: false
     };
   },
   computed: {
-    options() {
-      return this.poll.options.map(p => p.option);
+    optionStrings() {
+      return this.options.map(o => o.option);
     }
   },
   methods: {
@@ -48,6 +53,14 @@ export default {
     removeOptionField(i) {
       this.options.splice(i, 1);
     },
+    clearDialog() {
+      this.author = null;
+      this.question = null;
+      this.voters = null;
+      this.options = [];
+      this.selected = "";
+      this.$emit("close");
+    },
     async handleSubmit() {
       console.log(this.question);
       console.log(this.options);
@@ -59,6 +72,38 @@ export default {
           options: transformOptions(this.options),
           votes: 0
         });
+    },
+    async fetchPoll(id) {
+      const doc = await firebase
+        .firestore()
+        .collection("polls")
+        .doc(id)
+        .get();
+      const { author, question, voters } = doc.data();
+      this.question = question;
+      this.author = author;
+      this.voters = voters;
+    },
+    async fetchOptions(id) {
+      const snap = await firebase
+        .firestore()
+        .collection("polls")
+        .doc(id)
+        .collection("options")
+        .get();
+      snap.forEach(doc => {
+        this.options.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+    }
+  },
+  watch: {
+    poll(val) {
+      console.log(val);
+      this.fetchPoll(val.id);
+      this.fetchOptions(val.id);
     }
   }
 };
