@@ -1,18 +1,26 @@
 <template>
-  <v-dialog :value="open" @input="clearDialog" max-width="600px">
+  <v-dialog :value="open" @input="$emit('close')" max-width="600px">
     <v-card v-if="poll">
       <v-container>
-        <h2>Vote and view poll results</h2>
-        <p>{{ poll.question }}</p>
-        <div>
-          I'd like to vote for
-          <v-select
-            :loading="loadingOptions"
-            v-model="selected"
-            :items="optionStrings"
-            label="Question"
-            required
-          ></v-select>
+        <div class="d-flex flex-column">
+          <h2 class="mb-5">Vote to view poll results</h2>
+          <p class="font-weight-light title primary--text">Question</p>
+          <div class="px-4">
+            <span class="font-weight-bold">{{ poll.question }}</span>
+            <div class="d-flex align-center">
+              <span class="mr-3">I'd like to vote for:</span>
+
+              <v-select
+                :style="{ maxWidth: '300px' }"
+                v-model="selected"
+                :items="optionStrings"
+                label="Choose option"
+                required
+              ></v-select>
+            </div>
+
+            <v-btn @click="submitVote" :disabled="selected === ''">Vote!</v-btn>
+          </div>
         </div>
       </v-container>
     </v-card>
@@ -21,10 +29,7 @@
 
 <script>
 import firebase from "firebase";
-
-function transformOptions(arr) {
-  return arr.map(o => ({ count: 0, option: o }));
-}
+import { db, auth } from "@/main";
 
 export default {
   props: ["open", "poll"],
@@ -44,49 +49,28 @@ export default {
     }
   },
   methods: {
-    handleInput(i, event) {
-      this.options[i] = event;
-    },
-    addOptionField() {
-      this.options.push("");
-    },
-    removeOptionField(i) {
-      this.options.splice(i, 1);
-    },
-    clearDialog() {
-      this.author = null;
-      this.question = null;
-      this.voters = null;
-      this.options = [];
-      this.selected = "";
-      this.$emit("close");
-    },
-    async handleSubmit() {
-      console.log(this.question);
-      console.log(this.options);
-      await firebase
-        .firestore()
+    async submitVote() {
+      const selectedId = this.options.find(o => o.option === this.selected).id;
+      const pollRef = db.collection("polls").doc(this.poll.id);
+      const optionRef = db
         .collection("polls")
-        .add({
-          question: this.question,
-          options: transformOptions(this.options),
-          votes: 0
-        });
-    },
-    async fetchPoll(id) {
-      const doc = await firebase
-        .firestore()
-        .collection("polls")
-        .doc(id)
-        .get();
-      const { author, question, voters } = doc.data();
-      this.question = question;
-      this.author = author;
-      this.voters = voters;
+        .doc(this.poll.id)
+        .collection("options")
+        .doc(selectedId);
+      const batch = db.batch();
+
+      batch.update(pollRef, {
+        votes: firebase.firestore.FieldValue.increment(1),
+        voters: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.uid)
+      });
+      batch.update(optionRef, {
+        count: firebase.firestore.FieldValue.increment(1)
+      });
+      await batch.commit();
     },
     async fetchOptions(id) {
-      const snap = await firebase
-        .firestore()
+      this.options = [];
+      const snap = await db
         .collection("polls")
         .doc(id)
         .collection("options")
@@ -101,8 +85,6 @@ export default {
   },
   watch: {
     poll(val) {
-      console.log(val);
-      this.fetchPoll(val.id);
       this.fetchOptions(val.id);
     }
   }
