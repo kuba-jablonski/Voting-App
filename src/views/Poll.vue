@@ -1,23 +1,23 @@
 <template>
   <v-container>
     <div v-if="question === null">Loading...</div>
-    <component
+    <!-- <component
       v-if="question !== null"
       :is="activeComponent"
       :options="options"
       :question="question"
-    />
+    /> -->
+    <poll-results :options="options" :question="question" />
   </v-container>
 </template>
 
 <script>
 import firebase from "firebase";
 // import { db, auth } from "@/main";
-import PollVote from "@/components/PollVote";
 import PollResults from "@/components/PollResults";
 
 export default {
-  components: { PollVote, PollResults },
+  components: { PollResults },
   data() {
     return {
       author: null,

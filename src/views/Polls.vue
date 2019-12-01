@@ -24,7 +24,7 @@
       <v-list-item
         v-for="(item, i) in filteredItems"
         :key="i"
-        @click="(activeIndex = i), (voteDialog = true)"
+        @click="handleClick(i)"
       >
         <v-list-item-icon>
           <v-chip>{{ item.votes }}</v-chip>
@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import firebase from "firebase";
+import { auth, db } from "@/main";
 import VoteDialog from "@/components/VoteDialog";
 
 export default {
@@ -83,6 +83,17 @@ export default {
     }
   },
   methods: {
+    handleClick(i) {
+      const poll = this.items[i];
+      const uid = auth.currentUser.uid;
+      const skipVoting = poll.author.id === uid || poll.voters.includes(uid);
+      if (skipVoting) {
+        return this.$router.push(`/poll/${this.items[i].id}`);
+      }
+
+      this.activeIndex = i;
+      this.voteDialog = true;
+    },
     convertTimestamp(s) {
       const d = new Date(s * 1000);
       const year = d.getFullYear();
@@ -92,19 +103,18 @@ export default {
       return `${year}/${month}/${day}`;
     }
   },
-  mounted() {
-    firebase
-      .firestore()
-      .collection("polls")
-      .get()
-      .then(snap => {
-        snap.forEach(doc => {
-          this.items.push({
-            id: doc.id,
-            ...doc.data()
-          });
+  async mounted() {
+    try {
+      const snap = await db.collection("polls").get();
+      snap.forEach(doc => {
+        this.items.push({
+          id: doc.id,
+          ...doc.data()
         });
       });
+    } catch (e) {
+      console.log(e);
+    }
   }
 };
 </script>

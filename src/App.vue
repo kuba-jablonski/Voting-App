@@ -1,11 +1,25 @@
 <template>
   <v-app>
-    <v-app-bar flat app>
-      <v-toolbar-title class="headline text-uppercase d-flex align-center">
-        <v-img :src="logo" alt="Logo" max-height="45" max-width="45" />
-        <span>Poll</span>
-        <span class="font-weight-light">Time</span>
-      </v-toolbar-title>
+    <v-app-bar flat app :class="{ appbar: $route.path === '/' }">
+      <router-link to="/" class="nav-brand">
+        <v-toolbar-title
+          class="headline text-uppercase d-flex align-center"
+          :class="{
+            'white--text': $route.path === '/' && $vuetify.breakpoint.mdAndUp
+          }"
+        >
+          <icon-brand
+            :class="{
+              'brand-icon': true,
+              'brand-icon-white':
+                $route.path === '/' && $vuetify.breakpoint.mdAndUp
+            }"
+          />
+          <span>Poll</span>
+          <span class="font-weight-light">Time</span>
+        </v-toolbar-title>
+      </router-link>
+
       <v-spacer></v-spacer>
       <v-toolbar-items class="mr-3">
         <v-btn to="/about" text>
@@ -15,14 +29,14 @@
           <span>Poll list</span>
         </v-btn>
       </v-toolbar-items>
-      <v-btn v-if="!isAuthed" outlined @click="signinDialog = true">
+      <v-btn
+        v-if="!isAuthed"
+        outlined
+        color="primary"
+        @click="signinDialog = true"
+      >
         Sign in
       </v-btn>
-      <!-- <v-btn
-        v-if="isAuthed"
-        outlined
-        @click="signout"
-      >Sign out</v-btn> -->
       <v-menu v-if="isAuthed" offset-y>
         <template v-slot:activator="{ on }">
           <v-btn text v-on="on">
@@ -47,7 +61,7 @@
     <v-content>
       <signin-dialog :open="signinDialog" @close="signinDialog = false" />
       <create-dialog :open="createDialog" @close="createDialog = false" />
-      <router-view />
+      <router-view @openSignin="signinDialog = true" />
     </v-content>
   </v-app>
 </template>
@@ -58,10 +72,12 @@ import { mapGetters } from "vuex";
 
 import SigninDialog from "@/components/SigninDialog";
 import CreateDialog from "@/components/CreateDialog";
+import IconBrand from "@/components/icons/IconBrand";
 
 export default {
   name: "App",
   components: {
+    IconBrand,
     SigninDialog,
     CreateDialog
   },
@@ -89,3 +105,35 @@ export default {
   }
 };
 </script>
+
+<style>
+.appbar {
+  background: linear-gradient(
+    90deg,
+    rgba(237, 69, 69, 1) 27%,
+    rgba(250, 250, 250, 1) 75%
+  ) !important;
+}
+
+.nav-brand {
+  color: inherit !important;
+  text-decoration: none;
+}
+
+.brand-icon {
+  height: 45px;
+  width: 45px;
+  fill: #ed4545;
+  margin-right: 8px;
+}
+
+.brand-icon-white {
+  fill: white;
+}
+
+@media (max-width: 959px) {
+  .appbar {
+    background: white !important;
+  }
+}
+</style>
