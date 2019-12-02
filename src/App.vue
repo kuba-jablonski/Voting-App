@@ -105,7 +105,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .appbar {
   background: linear-gradient(
     90deg,

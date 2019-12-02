@@ -3,7 +3,7 @@
     <v-sheet>
       <v-container>
         <v-row align="center" justify="center" class="mb-4">
-          <v-img :src="logo" alt="Logo" max-height="100" max-width="100" />
+          <icon-brand class="brand-icon" />
         </v-row>
         <v-row justify="center" class="mb-5 font-weight-light">
           Sign in with your social network account
@@ -58,6 +58,7 @@ import IconGoogle from "@/components/icons/IconGoogle";
 import IconFacebook from "@/components/icons/IconFacebook";
 import IconTwitter from "@/components/icons/IconTwitter";
 import IconGithub from "@/components/icons/IconGithub";
+import IconBrand from "@/components/icons/IconBrand";
 
 export default {
   props: ["open"],
@@ -68,14 +69,17 @@ export default {
     IconGoogle,
     IconFacebook,
     IconTwitter,
-    IconGithub
-  },
-  data() {
-    return {
-      logo: require("@/assets/poll-icon-4.jpg")
-    };
+    IconGithub,
+    IconBrand
   }
 };
 </script>
 
-<style></style>
+<style scoped>
+.brand-icon {
+  height: 100px;
+  width: 100px;
+  fill: #ed4545;
+  margin-right: 8px;
+}
+</style>
