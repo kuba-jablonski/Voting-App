@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import firebase from "firebase";
+import { auth } from "@/main";
 import { mapGetters } from "vuex";
 
 import SigninDialog from "@/components/SigninDialog";
@@ -83,19 +83,18 @@ export default {
   },
   data: () => ({
     signinDialog: false,
-    createDialog: false,
-    logo: require("@/assets/poll-icon-4.jpg")
+    createDialog: false
   }),
   computed: {
     ...mapGetters(["isAuthed"])
   },
   methods: {
     async signout() {
-      await firebase.auth().signOut();
+      await auth.signOut();
     }
   },
   mounted() {
-    firebase.auth().onAuthStateChanged(user => {
+    auth.onAuthStateChanged(user => {
       if (user) {
         this.$store.commit("SET_UID", user.uid);
       } else {
