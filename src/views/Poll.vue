@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container :style="{ maxWidth: '800px' }">
     <div v-if="poll === null">Loading...</div>
     <div class="mt-9" v-else>
       <h1 class="mb-5 display-1">{{ poll.question }}</h1>
