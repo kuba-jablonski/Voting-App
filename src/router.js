@@ -2,6 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import Home from "./views/Home.vue";
 import Polls from "./views/Polls";
+import PollsUser from "./views/PollsUser";
 import Poll from "./views/Poll";
 
 Vue.use(Router);
@@ -28,6 +29,11 @@ export default new Router({
       path: "/polls",
       name: "polls",
       component: Polls
+    },
+    {
+      path: "/polls/me",
+      name: "myPolls",
+      component: PollsUser
     },
     {
       path: "/poll/:id",

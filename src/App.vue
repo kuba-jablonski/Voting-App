@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <!-- NAV DRAWER -->
     <v-navigation-drawer
       v-if="$vuetify.breakpoint.smAndDown"
       app
@@ -53,7 +54,9 @@
         </div>
       </template>
     </v-navigation-drawer>
+    <!-- END NAV DRAWER -->
 
+    <!-- APP BAR -->
     <v-app-bar flat app :class="{ appbar: $route.path === '/' }">
       <router-link to="/" class="nav-brand">
         <v-toolbar-title
@@ -102,7 +105,7 @@
           <v-list-item @click="createDialog = true">
             <v-list-item-title>Create New</v-list-item-title>
           </v-list-item>
-          <v-list-item>
+          <v-list-item to="/polls/me">
             <v-list-item-title>View My Polls</v-list-item-title>
           </v-list-item>
           <v-divider></v-divider>
@@ -116,6 +119,7 @@
         @click="drawer = !drawer"
       ></v-app-bar-nav-icon>
     </v-app-bar>
+    <!-- END APP BAR -->
 
     <v-content>
       <signin-dialog :open="signinDialog" @close="signinDialog = false" />
