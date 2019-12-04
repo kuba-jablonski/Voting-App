@@ -1,74 +1,60 @@
 <template>
   <v-container>
-    <div v-if="question === null">Loading...</div>
-    <!-- <component
-      v-if="question !== null"
-      :is="activeComponent"
-      :options="options"
-      :question="question"
-    /> -->
-    <poll-results :options="options" :question="question" />
+    <div v-if="poll === null">Loading...</div>
+    <div class="mt-9" v-else>
+      <h1 class="mb-5 display-1">{{ poll.question }}</h1>
+      <div class="body-2">Created by {{ poll.author.username }}</div>
+      <div class="body-2">Total votes: {{ poll.votes }}</div>
+      <v-btn depressed class="my-5 ">
+        <v-icon left dark>mdi-chevron-left</v-icon>Back to list
+      </v-btn>
+      <poll-results
+        :options="options"
+        :question="poll.question"
+        :loaded="loaded"
+      />
+    </div>
   </v-container>
 </template>
 
 <script>
-import firebase from "firebase";
-// import { db, auth } from "@/main";
+import { db } from "@/main";
 import PollResults from "@/components/PollResults";
 
 export default {
   components: { PollResults },
   data() {
     return {
-      author: null,
-      question: null,
-      voters: null,
-      options: []
+      poll: null,
+      options: [],
+      loaded: false
     };
-  },
-  computed: {
-    uid() {
-      return this.$store.state.uid;
-    },
-    activeComponent() {
-      return this.voters.includes(this.uid) ? "poll-results" : "poll-vote";
-    }
   },
   methods: {
     async fetchPoll() {
-      console.log("fetching POLL");
-      const doc = await firebase
-        .firestore()
+      const doc = await db
         .collection("polls")
         .doc(`${this.$route.params.id}`)
         .get();
-      const { author, question, voters } = doc.data();
-      this.question = question;
-      this.author = author;
-      this.voters = voters;
-      console.log("fetching POLL - DONE");
+      this.poll = doc.data();
     },
     async fetchOptions() {
-      console.log("fetching OPTIONS");
-      const snap = await firebase
-        .firestore()
+      const snap = await db
         .collection("polls")
         .doc(`${this.$route.params.id}`)
         .collection("options")
         .get();
       snap.forEach(doc => {
-        console.log(doc.data());
         this.options.push({
           id: doc.id,
           ...doc.data()
         });
       });
-      console.log("fetching OPTIONS - DONE");
     }
   },
-  mounted() {
-    this.fetchPoll();
-    this.fetchOptions();
+  async mounted() {
+    await Promise.all([this.fetchPoll(), this.fetchOptions()]);
+    this.loaded = true;
   }
 };
 </script>
