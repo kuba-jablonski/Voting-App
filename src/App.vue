@@ -1,5 +1,59 @@
 <template>
   <v-app>
+    <v-navigation-drawer
+      v-if="$vuetify.breakpoint.smAndDown"
+      app
+      v-model="drawer"
+    >
+      <v-list nav>
+        <v-list-item-group active-class="primary--text">
+          <v-list-item to="/">
+            <v-list-item-title>
+              Home
+            </v-list-item-title>
+          </v-list-item>
+          <v-list-item to="/about">
+            <v-list-item-title>
+              About
+            </v-list-item-title>
+          </v-list-item>
+          <v-list-item to="/polls">
+            <v-list-item-title>Poll List</v-list-item-title>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+      <v-divider></v-divider>
+      <v-list>
+        <v-list-item-group>
+          <v-list-item
+            @click="
+              drawer = false;
+              createDialog = true;
+            "
+          >
+            <v-list-item-title>
+              Create New
+            </v-list-item-title>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+      <template v-slot:append>
+        <div class="pa-2">
+          <v-btn @click="signout" v-if="isAuthed" outlined block>Logout</v-btn>
+          <v-btn
+            @click="
+              drawer = false;
+              signinDialog = true;
+            "
+            v-if="!isAuthed"
+            outlined
+            block
+            >Sign in</v-btn
+          >
+        </div>
+      </template>
+    </v-navigation-drawer>
+
     <v-app-bar flat app :class="{ appbar: $route.path === '/' }">
       <router-link to="/" class="nav-brand">
         <v-toolbar-title
@@ -21,7 +75,7 @@
       </router-link>
 
       <v-spacer></v-spacer>
-      <v-toolbar-items class="mr-3">
+      <v-toolbar-items v-if="$vuetify.breakpoint.mdAndUp" class="mr-3">
         <v-btn to="/about" text>
           <span>About</span>
         </v-btn>
@@ -30,14 +84,14 @@
         </v-btn>
       </v-toolbar-items>
       <v-btn
-        v-if="!isAuthed"
+        v-if="$vuetify.breakpoint.mdAndUp && !isAuthed"
         outlined
         color="primary"
         @click="signinDialog = true"
       >
         Sign in
       </v-btn>
-      <v-menu v-if="isAuthed" offset-y>
+      <v-menu v-if="$vuetify.breakpoint.mdAndUp && isAuthed" offset-y>
         <template v-slot:activator="{ on }">
           <v-btn text v-on="on">
             Welcome
@@ -57,7 +111,12 @@
           </v-list-item>
         </v-list>
       </v-menu>
+      <v-app-bar-nav-icon
+        v-if="$vuetify.breakpoint.smAndDown"
+        @click="drawer = !drawer"
+      ></v-app-bar-nav-icon>
     </v-app-bar>
+
     <v-content>
       <signin-dialog :open="signinDialog" @close="signinDialog = false" />
       <create-dialog :open="createDialog" @close="createDialog = false" />
@@ -83,7 +142,8 @@ export default {
   },
   data: () => ({
     signinDialog: false,
-    createDialog: false
+    createDialog: false,
+    drawer: false
   }),
   computed: {
     ...mapGetters(["isAuthed"])

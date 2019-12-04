@@ -1,11 +1,10 @@
 <template>
   <v-container :style="{ maxWidth: '800px' }">
-    <div v-if="poll === null">Loading...</div>
-    <div class="mt-9" v-else>
+    <div class="mt-9" v-if="poll">
       <h1 class="mb-5 display-1">{{ poll.question }}</h1>
       <div class="body-2">Created by {{ poll.author.username }}</div>
       <div class="body-2">Total votes: {{ poll.votes }}</div>
-      <v-btn depressed class="my-5 ">
+      <v-btn to="/polls" depressed class="my-5 ">
         <v-icon left dark>mdi-chevron-left</v-icon>Back to list
       </v-btn>
       <div>
