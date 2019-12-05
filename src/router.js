@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
+import store from "@/store";
 import Home from "./views/Home.vue";
 import Polls from "./views/Polls";
 import PollsUser from "./views/PollsUser";
@@ -33,7 +34,11 @@ export default new Router({
     {
       path: "/polls/me",
       name: "myPolls",
-      component: PollsUser
+      component: PollsUser,
+      beforeEnter: (to, from, next) => {
+        if (store.getters.isAuthed) next();
+        else next("/");
+      }
     },
     {
       path: "/poll/:id",

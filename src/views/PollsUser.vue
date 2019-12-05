@@ -105,7 +105,7 @@ export default {
   },
   async mounted() {
     try {
-      const snap = await db
+      const snap = await db()
         .collection("polls")
         .where("author.id", "==", this.$store.state.uid)
         .get();

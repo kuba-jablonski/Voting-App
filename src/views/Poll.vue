@@ -35,7 +35,9 @@ export default {
     }
   },
   methods: {
-    animate(ref, targetWidth) {
+    animate(ref, count) {
+      if (this.highestCount === 0) return;
+      const targetWidth = (count / this.highestCount) * 100;
       if (targetWidth < 1) return;
       let width = 0;
       let id = setInterval(() => {
@@ -73,14 +75,14 @@ export default {
     async $route() {
       await Promise.all([this.fetchPoll(), this.fetchOptions()]);
       this.options.forEach((o, i) => {
-        this.animate(this.$refs.bars[i], (o.count / this.highestCount) * 100);
+        this.animate(this.$refs.bars[i], o.count);
       });
     }
   },
   async mounted() {
     await Promise.all([this.fetchPoll(), this.fetchOptions()]);
     this.options.forEach((o, i) => {
-      this.animate(this.$refs.bars[i], (o.count / this.highestCount) * 100);
+      this.animate(this.$refs.bars[i], o.count);
     });
   }
 };
