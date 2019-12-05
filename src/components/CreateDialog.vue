@@ -6,7 +6,7 @@
         <v-form ref="form" @submit.prevent="handleSubmit" v-model="valid">
           <v-container>
             <v-text-field
-              v-model="question"
+              v-model.trim="question"
               label="Question"
               :rules="[v => !!v || 'Question is required']"
               required
@@ -14,9 +14,13 @@
             <template v-for="(option, i) in options">
               <v-text-field
                 :key="i"
-                :value="option"
-                :rules="[v => !!v || 'Option is required']"
-                @input="handleInput(i, $event)"
+                v-model.trim="options[i]"
+                :rules="[
+                  v => !!v || 'Option is required',
+                  v =>
+                    options.filter(o => o === v.trim()).length === 1 ||
+                    'Options must be unique'
+                ]"
               >
                 <v-icon slot="append" @click="removeOptionField(i)"
                   >mdi-delete</v-icon
@@ -108,6 +112,7 @@ export default {
           await batch.commit();
           this.$emit("close");
         } catch (e) {
+          console.log(e);
           this.snackbar = true;
         }
       }
