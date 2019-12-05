@@ -85,7 +85,7 @@ export default {
       this.loading = true;
       if (this.$refs.form.validate()) {
         try {
-          const { path } = await db()
+          const { id, path } = await db()
             .collection("polls")
             .add({
               question: this.question,
@@ -111,6 +111,7 @@ export default {
           });
           await batch.commit();
           this.$emit("close");
+          this.$router.push(`/poll/${id}`);
         } catch (e) {
           console.log(e);
           this.snackbar = true;

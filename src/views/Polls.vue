@@ -84,11 +84,11 @@ export default {
   },
   methods: {
     handleClick(i) {
-      const poll = this.items[i];
+      const poll = this.filteredItems[i];
       const uid = auth.currentUser && auth.currentUser.uid;
       const skipVoting = poll.author.id === uid || poll.voters.includes(uid);
       if (skipVoting) {
-        return this.$router.push(`/poll/${this.items[i].id}`);
+        return this.$router.push(`/poll/${poll.id}`);
       }
 
       this.activeIndex = i;

@@ -55,6 +55,7 @@ export default {
       this.poll = doc.data();
     },
     async fetchOptions() {
+      this.options = [];
       const snap = await db()
         .collection("polls")
         .doc(`${this.$route.params.id}`)
@@ -65,6 +66,14 @@ export default {
           id: doc.id,
           ...doc.data()
         });
+      });
+    }
+  },
+  watch: {
+    async $route() {
+      await Promise.all([this.fetchPoll(), this.fetchOptions()]);
+      this.options.forEach((o, i) => {
+        this.animate(this.$refs.bars[i], (o.count / this.highestCount) * 100);
       });
     }
   },
