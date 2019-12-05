@@ -54,7 +54,6 @@
 </template>
 
 <script>
-import firebase from "firebase";
 import { db, auth } from "@/main";
 
 export default {
@@ -82,22 +81,29 @@ export default {
       this.loading = true;
       if (this.$refs.form.validate()) {
         try {
-          const { path } = await db.collection("polls").add({
-            question: this.question,
-            votes: 0,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            author: {
-              username: auth.currentUser.displayName,
-              id: auth.currentUser.uid
-            },
-            voters: []
-          });
-          const batch = db.batch();
-          this.options.forEach(o => {
-            batch.set(db.collection(`${path}/options`).doc(), {
-              count: 0,
-              option: o
+          const { path } = await db()
+            .collection("polls")
+            .add({
+              question: this.question,
+              votes: 0,
+              createdAt: db.FieldValue.serverTimestamp(),
+              author: {
+                username: auth.currentUser.displayName,
+                id: auth.currentUser.uid
+              },
+              voters: []
             });
+          const batch = db().batch();
+          this.options.forEach(o => {
+            batch.set(
+              db()
+                .collection(`${path}/options`)
+                .doc(),
+              {
+                count: 0,
+                option: o
+              }
+            );
           });
           await batch.commit();
           this.$emit("close");

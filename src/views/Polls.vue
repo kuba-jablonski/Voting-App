@@ -105,7 +105,9 @@ export default {
   },
   async mounted() {
     try {
-      const snap = await db.collection("polls").get();
+      const snap = await db()
+        .collection("polls")
+        .get();
       snap.forEach(doc => {
         this.items.push({
           id: doc.id,

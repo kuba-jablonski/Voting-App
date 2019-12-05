@@ -45,7 +45,6 @@
 </template>
 
 <script>
-import firebase from "firebase";
 import { db, auth } from "@/main";
 import { mapGetters } from "vuex";
 
@@ -77,20 +76,22 @@ export default {
       try {
         const selectedId = this.options.find(o => o.option === this.selected)
           .id;
-        const pollRef = db.collection("polls").doc(this.poll.id);
-        const optionRef = db
+        const pollRef = db()
+          .collection("polls")
+          .doc(this.poll.id);
+        const optionRef = db()
           .collection("polls")
           .doc(this.poll.id)
           .collection("options")
           .doc(selectedId);
-        const batch = db.batch();
+        const batch = db().batch();
 
         batch.update(pollRef, {
-          votes: firebase.firestore.FieldValue.increment(1),
-          voters: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.uid)
+          votes: db.FieldValue.increment(1),
+          voters: db.FieldValue.arrayUnion(auth.currentUser.uid)
         });
         batch.update(optionRef, {
-          count: firebase.firestore.FieldValue.increment(1)
+          count: db.FieldValue.increment(1)
         });
         await batch.commit();
         this.loading = false;
@@ -102,7 +103,7 @@ export default {
     },
     async fetchOptions(id) {
       this.options = [];
-      const snap = await db
+      const snap = await db()
         .collection("polls")
         .doc(id)
         .collection("options")

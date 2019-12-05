@@ -156,16 +156,16 @@ export default {
     async signout() {
       await auth.signOut();
     }
-  },
-  mounted() {
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        this.$store.commit("SET_UID", user.uid);
-      } else {
-        this.$store.commit("SET_UID", null);
-      }
-    });
   }
+  // mounted() {
+  //   auth.onAuthStateChanged(user => {
+  //     if (user) {
+  //       this.$store.commit("SET_UID", user.uid);
+  //     } else {
+  //       this.$store.commit("SET_UID", null);
+  //     }
+  //   });
+  // }
 };
 </script>
 

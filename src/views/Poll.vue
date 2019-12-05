@@ -48,14 +48,14 @@ export default {
       }, 5);
     },
     async fetchPoll() {
-      const doc = await db
+      const doc = await db()
         .collection("polls")
         .doc(`${this.$route.params.id}`)
         .get();
       this.poll = doc.data();
     },
     async fetchOptions() {
-      const snap = await db
+      const snap = await db()
         .collection("polls")
         .doc(`${this.$route.params.id}`)
         .collection("options")
