@@ -16,11 +16,13 @@
         </div>
       </div>
     </div>
+    <div class="box"></div>
   </v-container>
 </template>
 
 <script>
 import { db } from "@/main";
+import gsap from "gsap";
 
 export default {
   data() {
@@ -39,15 +41,7 @@ export default {
       if (this.highestCount === 0) return;
       const targetWidth = (count / this.highestCount) * 100;
       if (targetWidth < 1) return;
-      let width = 0;
-      let id = setInterval(() => {
-        if (width >= targetWidth) {
-          clearInterval(id);
-        } else {
-          width++;
-          ref.style.width = width + "%";
-        }
-      }, 5);
+      gsap.to(ref, { width: targetWidth + "%" });
     },
     async fetchPoll() {
       const doc = await db()
