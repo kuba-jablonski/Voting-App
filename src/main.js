@@ -18,10 +18,10 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 export const db = firebase.firestore;
-export const auth = firebase.auth();
+export const auth = firebase.auth;
 
 let app;
-auth.onAuthStateChanged(user => {
+auth().onAuthStateChanged(user => {
   if (user) {
     store.commit("SET_UID", user.uid);
   } else {

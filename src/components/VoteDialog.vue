@@ -88,7 +88,7 @@ export default {
 
         batch.update(pollRef, {
           votes: db.FieldValue.increment(1),
-          voters: db.FieldValue.arrayUnion(auth.currentUser.uid)
+          voters: db.FieldValue.arrayUnion(auth().currentUser.uid)
         });
         batch.update(optionRef, {
           count: db.FieldValue.increment(1)

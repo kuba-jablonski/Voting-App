@@ -96,8 +96,8 @@ export default {
               votes: 0,
               createdAt: db.FieldValue.serverTimestamp(),
               author: {
-                username: auth.currentUser.displayName,
-                id: auth.currentUser.uid
+                username: auth().currentUser.displayName,
+                id: auth().currentUser.uid
               },
               voters: []
             });
