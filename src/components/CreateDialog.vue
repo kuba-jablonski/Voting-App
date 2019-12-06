@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :value="open" @input="$emit('close')" max-width="600px">
+  <v-dialog :value="open" @input="close" max-width="600px">
     <v-card>
       <v-container>
         <h2>New Poll</h2>
@@ -18,8 +18,8 @@
                 :rules="[
                   v => !!v || 'Option is required',
                   v =>
-                    options.filter(o => o === v.trim()).length === 1 ||
-                    'Options must be unique'
+                    options.filter(o => o === (v ? v.trim() : null)).length ===
+                      1 || 'Options must be unique'
                 ]"
               >
                 <v-icon slot="append" @click="removeOptionField(i)"
@@ -42,7 +42,7 @@
                 type="submit"
                 >Submit</v-btn
               >
-              <v-btn depressed @click="$emit('close')">Cancel</v-btn>
+              <v-btn depressed @click="close">Cancel</v-btn>
             </v-row>
           </v-container>
         </v-form>
@@ -80,6 +80,10 @@ export default {
     },
     removeOptionField(i) {
       this.options.splice(i, 1);
+    },
+    close() {
+      this.$refs.form.reset();
+      this.$emit("close");
     },
     async handleSubmit() {
       this.loading = true;

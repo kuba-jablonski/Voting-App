@@ -27,7 +27,7 @@
         @click="handleClick(i)"
       >
         <v-list-item-icon>
-          <v-chip>{{ item.votes }}</v-chip>
+          <v-chip color="primary">{{ item.votes }}</v-chip>
         </v-list-item-icon>
         <v-list-item-content>
           <v-list-item-title>{{ item.question }}</v-list-item-title>
