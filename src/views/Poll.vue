@@ -28,7 +28,8 @@ export default {
   data() {
     return {
       poll: null,
-      options: []
+      options: [],
+      listeners: []
     };
   },
   computed: {
@@ -43,41 +44,51 @@ export default {
       if (targetWidth < 1) return;
       gsap.to(ref, { width: targetWidth + "%" });
     },
-    async fetchPoll() {
-      const doc = await db()
+    fetchPoll() {
+      return db()
         .collection("polls")
         .doc(`${this.$route.params.id}`)
-        .get();
-      this.poll = doc.data();
+        .onSnapshot(doc => {
+          this.poll = {
+            id: doc.id,
+            ...doc.data()
+          };
+        });
     },
-    async fetchOptions() {
-      this.options = [];
-      const snap = await db()
+    fetchOptions() {
+      return db()
         .collection("polls")
         .doc(`${this.$route.params.id}`)
         .collection("options")
-        .get();
-      snap.forEach(doc => {
-        this.options.push({
-          id: doc.id,
-          ...doc.data()
+        .onSnapshot(snap => {
+          this.options = [];
+          snap.forEach(doc => {
+            this.options.push({
+              id: doc.id,
+              ...doc.data()
+            });
+          });
         });
-      });
     }
   },
   watch: {
-    async $route() {
-      await Promise.all([this.fetchPoll(), this.fetchOptions()]);
-      this.options.forEach((o, i) => {
-        this.animate(this.$refs.bars[i], o.count);
+    options() {
+      this.$nextTick(() => {
+        this.options.forEach((o, i) => {
+          this.animate(this.$refs.bars[i], o.count);
+        });
       });
+    },
+    $route() {
+      this.listeners.forEach(cb => cb());
+      this.listeners.push(this.fetchPoll(), this.fetchOptions());
     }
   },
-  async mounted() {
-    await Promise.all([this.fetchPoll(), this.fetchOptions()]);
-    this.options.forEach((o, i) => {
-      this.animate(this.$refs.bars[i], o.count);
-    });
+  mounted() {
+    this.listeners.push(this.fetchPoll(), this.fetchOptions());
+  },
+  beforeDestroy() {
+    this.listeners.forEach(cb => cb());
   }
 };
 </script>
