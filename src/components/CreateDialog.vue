@@ -114,7 +114,7 @@ export default {
             );
           });
           await batch.commit();
-          this.$emit("close");
+          this.close();
           this.$router.push(`/poll/${id}`);
         } catch (e) {
           console.log(e);
