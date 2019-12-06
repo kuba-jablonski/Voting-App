@@ -8,23 +8,26 @@
     >
       <v-list nav>
         <v-list-item-group active-class="primary--text">
-          <v-list-item to="/">
+          <v-list-item to="/" exact>
             <v-list-item-title>
               Home
             </v-list-item-title>
           </v-list-item>
-          <v-list-item to="/about">
+          <v-list-item to="/about" exact>
             <v-list-item-title>
               About
             </v-list-item-title>
           </v-list-item>
-          <v-list-item to="/polls">
+          <v-list-item to="/polls" exact>
             <v-list-item-title>Poll List</v-list-item-title>
+          </v-list-item>
+          <v-list-item v-if="isAuthed" to="/polls/me" exact>
+            <v-list-item-title>My Polls</v-list-item-title>
           </v-list-item>
         </v-list-item-group>
       </v-list>
-      <v-divider></v-divider>
-      <v-list>
+      <v-divider v-if="isAuthed"></v-divider>
+      <v-list v-if="isAuthed">
         <v-list-item-group>
           <v-list-item
             @click="
@@ -157,15 +160,6 @@ export default {
       await auth.signOut();
     }
   }
-  // mounted() {
-  //   auth.onAuthStateChanged(user => {
-  //     if (user) {
-  //       this.$store.commit("SET_UID", user.uid);
-  //     } else {
-  //       this.$store.commit("SET_UID", null);
-  //     }
-  //   });
-  // }
 };
 </script>
 
