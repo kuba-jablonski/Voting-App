@@ -34,7 +34,12 @@
           This action cannot be undone.
         </v-card-text>
         <v-card-actions>
-          <v-btn color="green darken-1" text @click="remove">
+          <v-btn
+            :loading="deleteInProgress"
+            color="green darken-1"
+            text
+            @click="remove"
+          >
             Yes
           </v-btn>
           <v-btn color="red darken-1" text @click="dialog = false">
@@ -43,6 +48,12 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-snackbar v-model="snackbar" :timeout="5000" color="red">
+      {{ error }}
+      <v-btn text @click="snackbar = false">
+        Close
+      </v-btn>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -57,7 +68,10 @@ export default {
       poll: null,
       options: [],
       listeners: [],
-      dialog: false
+      dialog: false,
+      snackbar: false,
+      error: "",
+      deleteInProgress: false
     };
   },
   computed: {
@@ -72,8 +86,10 @@ export default {
   methods: {
     animate(ref, count) {
       if (this.highestCount === 0) return;
+      if (count === 0) {
+        return (ref.style.width = "20px");
+      }
       const targetWidth = (count / this.highestCount) * 100;
-      if (targetWidth < 1) return;
       gsap.to(ref, { width: targetWidth + "%" });
     },
     fetchPoll() {
@@ -104,26 +120,31 @@ export default {
     },
     async remove() {
       if (!this.isAuthed || !this.isAuthor) return;
+      this.deleteInProgress = true;
       this.listeners.forEach(cb => cb());
       try {
-        await db()
-          .collection("polls")
-          .doc(this.$route.params.id)
-          .delete();
         const batch = db().batch();
+        batch.delete(
+          db()
+            .collection("polls")
+            .doc(this.$route.params.id)
+        );
         this.options.forEach(o => {
           batch.delete(
             db()
               .collection("polls")
               .doc(this.$route.params.id)
-              .collection(`options`)
+              .collection("options")
               .doc(o.id)
           );
         });
         await batch.commit();
         this.$router.push("/polls");
       } catch (e) {
-        console.log(e);
+        this.error = e.message ? e.message : "Something went wrong";
+        this.snackbar = true;
+      } finally {
+        this.deleteInProgress = false;
       }
     }
   },
@@ -152,6 +173,7 @@ export default {
 <style scoped>
 .bar {
   height: 20px;
+  min-width: 20px;
   width: 20px;
   background-color: red;
   display: flex;
