@@ -19,29 +19,32 @@
         ></v-select>
       </v-col>
     </v-row>
-    <v-list>
-      <v-subheader>POLL LIST</v-subheader>
-      <v-list-item
-        v-for="(item, i) in filteredItems"
-        :key="i"
-        @click="handleClick(i)"
-      >
-        <v-list-item-icon>
-          <v-chip color="primary">{{ item.votes }}</v-chip>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title>{{ item.question }}</v-list-item-title>
-        </v-list-item-content>
-        <v-list-item-action>
-          <v-list-item-action-text
-            >by {{ item.author.username }} |
-            {{
-              convertTimestamp(item.createdAt.seconds)
-            }}</v-list-item-action-text
-          >
-        </v-list-item-action>
-      </v-list-item>
-    </v-list>
+    <v-slide-y-reverse-transition>
+      <v-list v-if="itemsLoaded">
+        <v-subheader>POLL LIST</v-subheader>
+        <v-list-item
+          v-for="(item, i) in filteredItems"
+          :key="i"
+          @click="handleClick(i)"
+        >
+          <v-list-item-icon>
+            <v-chip color="primary">{{ item.votes }}</v-chip>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>{{ item.question }}</v-list-item-title>
+          </v-list-item-content>
+          <v-list-item-action>
+            <v-list-item-action-text
+              >by {{ item.author.username }} |
+              {{
+                convertTimestamp(item.createdAt.seconds)
+              }}</v-list-item-action-text
+            >
+          </v-list-item-action>
+        </v-list-item>
+      </v-list>
+    </v-slide-y-reverse-transition>
+
     <vote-dialog
       :open="voteDialog"
       @close="voteDialog = false"
@@ -60,6 +63,7 @@ export default {
   },
   data: () => ({
     items: [],
+    itemsLoaded: false,
     activeIndex: null,
     voteDialog: false,
     sortType: "most popular",
@@ -116,6 +120,8 @@ export default {
       });
     } catch (e) {
       console.log(e);
+    } finally {
+      this.itemsLoaded = true;
     }
   }
 };
