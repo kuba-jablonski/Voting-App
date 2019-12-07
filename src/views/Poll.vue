@@ -9,7 +9,7 @@
       </v-btn>
       <v-btn
         v-if="isAuthed && isAuthor"
-        @click="remove"
+        @click="dialog = true"
         outlined
         color="primary"
         class="my-5 "
@@ -25,7 +25,24 @@
         </div>
       </div>
     </div>
-    <div class="box"></div>
+    <v-dialog v-model="dialog" max-width="500">
+      <v-card>
+        <v-card-title class="headline"
+          >Are you sure you want to delete this poll?</v-card-title
+        >
+        <v-card-text>
+          This action cannot be undone.
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="green darken-1" text @click="remove">
+            Yes
+          </v-btn>
+          <v-btn color="red darken-1" text @click="dialog = false">
+            No
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -39,7 +56,8 @@ export default {
     return {
       poll: null,
       options: [],
-      listeners: []
+      listeners: [],
+      dialog: false
     };
   },
   computed: {
