@@ -104,20 +104,16 @@ export default {
     }
   },
   async mounted() {
-    try {
-      const snap = await db()
-        .collection("polls")
-        .where("author.id", "==", this.$store.state.uid)
-        .get();
-      snap.forEach(doc => {
-        this.items.push({
-          id: doc.id,
-          ...doc.data()
-        });
+    const snap = await db()
+      .collection("polls")
+      .where("author.id", "==", this.$store.state.uid)
+      .get();
+    snap.forEach(doc => {
+      this.items.push({
+        id: doc.id,
+        ...doc.data()
       });
-    } catch (e) {
-      console.log(e.message);
-    }
+    });
   }
 };
 </script>

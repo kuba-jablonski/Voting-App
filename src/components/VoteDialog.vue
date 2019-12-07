@@ -98,7 +98,6 @@ export default {
         this.$router.push(`/poll/${this.poll.id}`);
       } catch (e) {
         this.loading = false;
-        console.log(e);
       }
     },
     async fetchOptions(id) {

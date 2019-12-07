@@ -49,7 +49,7 @@
       </v-container>
     </v-card>
     <v-snackbar v-model="snackbar" :timeout="5000" color="red">
-      Something went wrong
+      {{ error }}
       <v-btn text @click="snackbar = false">
         Close
       </v-btn>
@@ -68,7 +68,8 @@ export default {
       loading: false,
       valid: false,
       question: "",
-      options: ["", ""]
+      options: ["", ""],
+      error: ""
     };
   },
   methods: {
@@ -117,7 +118,7 @@ export default {
           this.close();
           this.$router.push(`/poll/${id}`);
         } catch (e) {
-          console.log(e);
+          this.error = e.message ? e.message : "Something went wrong";
           this.snackbar = true;
         }
       }
