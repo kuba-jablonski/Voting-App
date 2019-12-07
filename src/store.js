@@ -14,6 +14,7 @@ export default new Vuex.Store({
   },
   actions: {},
   getters: {
-    isAuthed: state => state.uid !== null
+    isAuthed: state => state.uid !== null,
+    uid: state => state.uid
   }
 });

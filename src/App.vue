@@ -157,7 +157,7 @@ export default {
   },
   methods: {
     async signout() {
-      await auth.signOut();
+      await auth().signOut();
     }
   }
 };

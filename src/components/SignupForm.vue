@@ -63,8 +63,11 @@ export default {
       this.loading = true;
       if (this.$refs.form.validate()) {
         try {
-          await auth.createUserWithEmailAndPassword(this.email, this.password);
-          auth.currentUser.updateProfile({ displayName: this.username });
+          await auth().createUserWithEmailAndPassword(
+            this.email,
+            this.password
+          );
+          auth().currentUser.updateProfile({ displayName: this.username });
           this.$emit("close");
         } catch (e) {
           this.errorMsg = e.message ? e.message : "Something went wrong";

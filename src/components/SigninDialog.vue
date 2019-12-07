@@ -38,13 +38,15 @@
 <script>
 import LoginForm from "@/components/LoginForm";
 import SignupForm from "@/components/SignupForm";
+import IconBrand from "@/components/icons/IconBrand";
 import { auth } from "@/main";
 
 export default {
   props: ["open"],
   components: {
     LoginForm,
-    SignupForm
+    SignupForm,
+    IconBrand
   },
   methods: {
     signIn() {

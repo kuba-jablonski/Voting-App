@@ -4,8 +4,17 @@
       <h1 class="mb-5 display-1">{{ poll.question }}</h1>
       <div class="body-2">Created by {{ poll.author.username }}</div>
       <div class="body-2">Total votes: {{ poll.votes }}</div>
-      <v-btn to="/polls" depressed class="my-5 ">
+      <v-btn to="/polls" depressed class="my-5 mr-2">
         <v-icon left dark>mdi-chevron-left</v-icon>Back to list
+      </v-btn>
+      <v-btn
+        v-if="isAuthed && isAuthor"
+        @click="remove"
+        outlined
+        color="primary"
+        class="my-5 "
+      >
+        <v-icon left dark>mdi-delete</v-icon>Delete this poll
       </v-btn>
       <div>
         <div class="option" v-for="option in options" :key="option.option">
@@ -21,8 +30,9 @@
 </template>
 
 <script>
-import { db } from "@/main";
 import gsap from "gsap";
+import { mapGetters } from "vuex";
+import { db } from "@/main";
 
 export default {
   data() {
@@ -33,6 +43,10 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(["isAuthed", "uid"]),
+    isAuthor() {
+      return this.uid === this.poll.author.id;
+    },
     highestCount() {
       return Math.max(...this.options.map(o => o.count));
     }
@@ -69,6 +83,30 @@ export default {
             });
           });
         });
+    },
+    async remove() {
+      if (!this.isAuthed || !this.isAuthor) return;
+      this.listeners.forEach(cb => cb());
+      try {
+        await db()
+          .collection("polls")
+          .doc(this.$route.params.id)
+          .delete();
+        const batch = db().batch();
+        this.options.forEach(o => {
+          batch.delete(
+            db()
+              .collection("polls")
+              .doc(this.$route.params.id)
+              .collection(`options`)
+              .doc(o.id)
+          );
+        });
+        await batch.commit();
+        this.$router.push("/polls");
+      } catch (e) {
+        console.log(e);
+      }
     }
   },
   watch: {

@@ -29,7 +29,7 @@ export default {
     async submit() {
       this.loading = true;
       try {
-        await auth.signInWithEmailAndPassword(this.email, this.password);
+        await auth().signInWithEmailAndPassword(this.email, this.password);
         this.$emit("close");
       } catch (e) {
         this.errorMsg = e.message ? e.message : "Something went wrong";
