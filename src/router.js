@@ -3,7 +3,6 @@ import Router from "vue-router";
 import store from "@/store";
 import Home from "./views/Home.vue";
 import Polls from "./views/Polls";
-import PollsUser from "./views/PollsUser";
 import Poll from "./views/Poll";
 
 Vue.use(Router);
@@ -34,7 +33,7 @@ export default new Router({
     {
       path: "/polls/me",
       name: "myPolls",
-      component: PollsUser,
+      component: Polls,
       beforeEnter: (to, from, next) => {
         if (store.getters.isAuthed) next();
         else next("/");

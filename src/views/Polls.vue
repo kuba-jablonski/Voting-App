@@ -98,6 +98,29 @@ export default {
       this.activeIndex = i;
       this.voteDialog = true;
     },
+    async fetchPolls() {
+      let ref;
+      if (this.$route.name === "myPolls") {
+        ref = db()
+          .collection("polls")
+          .where("author.id", "==", this.$store.state.uid);
+      } else {
+        ref = db().collection("polls");
+      }
+      try {
+        const snap = await ref.get();
+        snap.forEach(doc => {
+          this.items.push({
+            id: doc.id,
+            ...doc.data()
+          });
+        });
+      } catch (e) {
+        console.log(e);
+      } finally {
+        this.itemsLoaded = true;
+      }
+    },
     convertTimestamp(s) {
       const d = new Date(s * 1000);
       const year = d.getFullYear();
@@ -107,22 +130,15 @@ export default {
       return `${year}/${month}/${day}`;
     }
   },
-  async mounted() {
-    try {
-      const snap = await db()
-        .collection("polls")
-        .get();
-      snap.forEach(doc => {
-        this.items.push({
-          id: doc.id,
-          ...doc.data()
-        });
-      });
-    } catch (e) {
-      console.log(e);
-    } finally {
-      this.itemsLoaded = true;
+  watch: {
+    $route() {
+      this.items = [];
+      this.itemsLoaded = false;
+      this.fetchPolls();
     }
+  },
+  mounted() {
+    this.fetchPolls();
   }
 };
 </script>
