@@ -22,7 +22,10 @@
                       1 || 'Options must be unique'
                 ]"
               >
-                <v-icon slot="append" @click="removeOptionField(i)"
+                <v-icon
+                  v-if="options.length > 2"
+                  slot="append"
+                  @click="removeOptionField(i)"
                   >mdi-delete</v-icon
                 >
                 <v-icon slot="prepend" color="primary">mdi-adjust</v-icon>
