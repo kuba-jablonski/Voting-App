@@ -2,7 +2,10 @@
   <form>
     <v-text-field v-model="email" label="E-mail"></v-text-field>
     <v-text-field v-model="password" label="Password"></v-text-field>
-    <v-btn depressed color="primary" @click="submit">submit</v-btn>
+    <v-btn depressed color="primary" class="mr-2" type="submit" @click="submit"
+      >submit</v-btn
+    >
+    <v-btn depressed @click="$emit('close')">cancel</v-btn>
     <v-snackbar v-model="snackbar" :timeout="5000" color="red">
       {{ errorMsg }}
       <v-btn text @click="snackbar = false">

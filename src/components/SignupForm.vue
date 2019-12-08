@@ -18,9 +18,15 @@
       v-model="password"
       label="Password"
     ></v-text-field>
-    <v-btn :loading="loading" depressed color="primary" type="submit"
+    <v-btn
+      :loading="loading"
+      depressed
+      color="primary"
+      type="submit"
+      class="mr-2"
       >submit</v-btn
     >
+    <v-btn depressed @click="$emit('close')">cancel</v-btn>
     <v-snackbar v-model="snackbar" :timeout="5000" color="red">
       {{ errorMsg }}
       <v-btn text @click="snackbar = false">
