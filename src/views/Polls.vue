@@ -20,7 +20,7 @@
       </v-col>
     </v-row>
     <v-slide-y-reverse-transition>
-      <v-list v-if="itemsLoaded">
+      <v-list elevation="1" v-if="itemsLoaded">
         <v-subheader>POLL LIST</v-subheader>
         <v-list-item
           v-for="(item, i) in filteredItems"

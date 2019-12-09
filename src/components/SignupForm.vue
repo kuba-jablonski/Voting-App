@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="form" v-model="valid" @submit.prevent="submit">
+  <v-form ref="signupForm" v-model="valid" @submit.prevent="submit">
     <v-text-field
       validate-on-blur
       :rules="usernameRules"
@@ -17,6 +17,7 @@
       :rules="passwordRules"
       v-model="password"
       label="Password"
+      class="mb-2"
     ></v-text-field>
     <v-btn
       :loading="loading"
@@ -67,7 +68,8 @@ export default {
   methods: {
     async submit() {
       this.loading = true;
-      if (this.$refs.form.validate()) {
+      console.log(this.$refs);
+      if (this.$refs.signupForm.validate()) {
         try {
           await auth().createUserWithEmailAndPassword(
             this.email,
