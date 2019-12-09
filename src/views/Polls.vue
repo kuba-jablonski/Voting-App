@@ -11,6 +11,7 @@
       </v-col>
       <v-col cols="12" sm="6">
         <v-select
+          :class="{ 'mt-n7': $vuetify.breakpoint.xs }"
           outlined
           label="Sort by"
           v-model="sortType"
@@ -20,7 +21,7 @@
       </v-col>
     </v-row>
     <v-slide-y-reverse-transition>
-      <v-list elevation="1" v-if="itemsLoaded">
+      <v-list class="mt-n4" two-line elevation="1" v-if="itemsLoaded">
         <v-subheader>POLL LIST</v-subheader>
         <v-list-item
           v-for="(item, i) in filteredItems"
@@ -32,15 +33,11 @@
           </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title>{{ item.question }}</v-list-item-title>
-          </v-list-item-content>
-          <v-list-item-action>
-            <v-list-item-action-text
+            <v-list-item-subtitle
               >by {{ item.author.username }} |
-              {{
-                convertTimestamp(item.createdAt.seconds)
-              }}</v-list-item-action-text
-            >
-          </v-list-item-action>
+              {{ item.createdAt.seconds | convertTimestamp }}
+            </v-list-item-subtitle>
+          </v-list-item-content>
         </v-list-item>
       </v-list>
     </v-slide-y-reverse-transition>
@@ -120,14 +117,6 @@ export default {
       } finally {
         this.itemsLoaded = true;
       }
-    },
-    convertTimestamp(s) {
-      const d = new Date(s * 1000);
-      const year = d.getFullYear();
-      const month = d.getMonth();
-      const day = d.getDate();
-
-      return `${year}/${month}/${day}`;
     }
   },
   watch: {
@@ -135,6 +124,18 @@ export default {
       this.items = [];
       this.itemsLoaded = false;
       this.fetchPolls();
+    }
+  },
+  filters: {
+    convertTimestamp(s) {
+      if (!s) return;
+
+      const d = new Date(s * 1000);
+      const year = d.getFullYear();
+      const month = d.getMonth();
+      const day = d.getDate();
+
+      return `${year}/${month}/${day}`;
     }
   },
   mounted() {
