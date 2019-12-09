@@ -2,19 +2,16 @@
   <v-container>
     <!-- <h1 class="display-1 mb-5">About PollTime</h1> -->
     <div class="content">
-      <h2 class="title primary--text">Project Purpose</h2>
+      <h2 class="title primary--text mt-9 mb-2">Project Purpose</h2>
       <p>
         This is a freeCodeCamp full-stack project, following the instruction of
-        "dsagsadfhlsdaasdhlf"
+        <a
+          target="_blank"
+          href="https://www.freecodecamp.org/learn/coding-interview-prep/take-home-projects/build-a-voting-app"
+          >"Take Home Projects - Build a Voting App"</a
+        >
       </p>
-      <p>The project fullfills the following user stories:</p>
-      <ul>
-        <li>sadfsddsfsd</li>
-        <li>sadfsddsfsd</li>
-        <li>sadfsddsfsd</li>
-        <li>sadfsddsfsd</li>
-      </ul>
-      <h2 class="title primary--text mt-5">Tech Stack</h2>
+      <h2 class="title primary--text mt-5 mb-2">Tech Stack</h2>
       <div class="d-flex ">
         <div
           class="d-flex flex-column align-center body-2 font-weight-bold text-uppercase mr-5 "
