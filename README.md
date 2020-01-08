@@ -1,4 +1,4 @@
-![Preview screenshot](relative/path/to/img.jpg?raw=true "Title")
+![Preview screenshot](preview.png?raw=true "Title")
 
 # vue-polls
 
