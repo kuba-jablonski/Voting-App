@@ -10,4 +10,4 @@ This is a freeCodeCamp full-stack project, following the instruction of [Take Ho
 
 - [Vue.js](https://vuejs.org/)
 - [Vuetify](https://vuetifyjs.com/)
-- [Firebase](https://firebase.google.com/)S
+- [Firebase](https://firebase.google.com/)
