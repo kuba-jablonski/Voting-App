@@ -138,21 +138,8 @@ export default {
       return `${year}/${month}/${day}`;
     }
   },
-<<<<<<< HEAD
-  async mounted() {
-    const snap = await db()
-      .collection("polls")
-      .get();
-    snap.forEach(doc => {
-      this.items.push({
-        id: doc.id,
-        ...doc.data()
-      });
-    });
-=======
   mounted() {
     this.fetchPolls();
->>>>>>> dev
   }
 };
 </script>
