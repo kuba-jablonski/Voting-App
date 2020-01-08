@@ -8,7 +8,7 @@
         <v-row justify="center" class="mb-5 font-weight-light">
           <!-- Sign in with your social network account -->
           <v-btn @click="signIn" outlined color="primary">
-            Login with Google</v-btn
+            Sign in with Google</v-btn
           >
         </v-row>
         <v-row justify="center" class="font-weight-light mb-5">

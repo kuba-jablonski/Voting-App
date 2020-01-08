@@ -1,10 +1,12 @@
 <template>
   <v-container :style="{ maxWidth: '800px' }">
-    <div class="mt-9" v-if="poll">
-      <h1 class="mb-5 display-1">{{ poll.question }}</h1>
-      <div class="body-2">Created by {{ poll.author.username }}</div>
-      <div class="body-2">Total votes: {{ poll.votes }}</div>
-      <v-btn to="/polls" depressed class="my-5 mr-2">
+    <div v-if="poll">
+      <h1 class="mb-3 headline">{{ poll.question }}</h1>
+      <div class="subtitle-1 font-italic">
+        Created by {{ poll.author.username }}
+      </div>
+      <div class="subtitle-1 font-italic">Total votes: {{ poll.votes }}</div>
+      <v-btn to="/polls" depressed class="my-7 mr-2">
         <v-icon left dark>mdi-chevron-left</v-icon>Back to list
       </v-btn>
       <v-btn
@@ -172,10 +174,10 @@ export default {
 
 <style scoped>
 .bar {
-  height: 20px;
+  height: 23px;
   min-width: 20px;
   width: 20px;
-  background-color: red;
+  background-color: #ed4545;
   display: flex;
   justify-content: flex-end;
   align-items: center;

@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="form" v-model="valid" @submit.prevent="submit">
+  <v-form ref="signupForm" v-model="valid" @submit.prevent="submit">
     <v-text-field
       validate-on-blur
       :rules="usernameRules"
@@ -17,10 +17,17 @@
       :rules="passwordRules"
       v-model="password"
       label="Password"
+      class="mb-2"
     ></v-text-field>
-    <v-btn :loading="loading" depressed color="primary" type="submit"
+    <v-btn
+      :loading="loading"
+      depressed
+      color="primary"
+      type="submit"
+      class="mr-2"
       >submit</v-btn
     >
+    <v-btn depressed @click="$emit('close')">cancel</v-btn>
     <v-snackbar v-model="snackbar" :timeout="5000" color="red">
       {{ errorMsg }}
       <v-btn text @click="snackbar = false">
@@ -61,7 +68,8 @@ export default {
   methods: {
     async submit() {
       this.loading = true;
-      if (this.$refs.form.validate()) {
+      console.log(this.$refs);
+      if (this.$refs.signupForm.validate()) {
         try {
           await auth().createUserWithEmailAndPassword(
             this.email,
