@@ -1,37 +1,13 @@
-![Preview screenshot](preview.png?raw=true "Title")
+# Polltime
 
-# vue-polls
+![Preview screenshot](preview.png?raw=true)
 
-## Project setup
+## About
 
-```
-yarn install
-```
+This is a freeCodeCamp full-stack project, following the instruction of [Take Home Projects - Build a Voting App](https://www.freecodecamp.org/learn/coding-interview-prep/take-home-projects/build-a-voting-app/)
 
-### Compiles and hot-reloads for development
+## Stack
 
-```
-yarn run serve
-```
-
-### Compiles and minifies for production
-
-```
-yarn run build
-```
-
-### Run your tests
-
-```
-yarn run test
-```
-
-### Lints and fixes files
-
-```
-yarn run lint
-```
-
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
+- [Vue.js](https://vuejs.org/)
+- [Vuetify](https://vuetifyjs.com/)
+- [Firebase](https://firebase.google.com/)S
